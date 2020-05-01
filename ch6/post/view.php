@@ -4,6 +4,8 @@ require('../dbconnect.php');
 
 session_start();
 
+$db=DBconnect();
+
 if(empty($_REQUEST['id'])){
    header('Location: index.php'); exit();
 }

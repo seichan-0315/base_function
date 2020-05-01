@@ -3,7 +3,7 @@
 require('../dbconnect.php');
 
 session_start();
-
+$db=DBconnect();
 if($_COOKIE['email']!=''){
     $_POST['email']=$_COOKIE['email'];
     $_POST['password']=$_COOKIE['password'];

@@ -3,6 +3,8 @@
 session_start();
 require('../dbconnect.php');
 
+$db=DBconnect();
+
 if(isset($_SESSION['id']) && $_SESSION['time']+3600 > time()){
     //ログインしている
     $_SESSION['time']=time();
@@ -17,7 +19,8 @@ if(isset($_SESSION['id']) && $_SESSION['time']+3600 > time()){
 
 //投稿を記録する
 
-
+ // 禁止ワードチェックフラグを0にセット
+$ngflag = 0;
 if(!empty($_POST)){
 // 禁止ワード設定ファイルをパース
 $code = parse_ini_file('../ngword.ini', true);
@@ -25,8 +28,8 @@ $ng_words = $code['NG_WORDS'];
 $ok_words = $code['OK_WORDS'];
 
 
- // 禁止ワードチェックフラグを0にセット
-  $ngflag = 0;
+
+  
 
   // タイトル変数を一旦$title_tempへ
   $title_temp = $_POST['message'];
@@ -144,12 +147,18 @@ while($post=$posts->fetch()){
     <p class="error"><?php print("※ngワードが含まれています");  ?>
  
 <?php endif; ?>
+<br><br>
+<p><a href="./logout.php">logout</p>
   </div>
+
+
 
   <!-- 54行目のforeachはちゃんと出るのにここだと表示されないというかformの後に置くと出てこない-->
   <?php 
   $posts=$db->query('select m.name ,m.picture,p.* from members m ,posts p where m.id=p.member_id order by p.created desc');
-while($post=$posts->fetch()):
+   //$posts->fetch();
+ foreach ($posts as $post):
+//while($post=$posts->fetch()):
 ?>
 <div class="msg">
     <img src="member_picture/<?php echo h($post['picture']); ?>" width="48" height="48" alt="<?php echo h($post['name']); ?>" />
@@ -161,7 +170,8 @@ while($post=$posts->fetch()):
 </p>
 </div>
 <?php 
-endwhile;
+//endwhile;
+endforeach;
 ?>
 
 </div>
